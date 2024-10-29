@@ -4,13 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 
 void main() {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   const MethodChannel channel = MethodChannel('gallery_saver');
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       switch (methodCall.method) {
         case 'saveImage':
           return true;
@@ -22,7 +22,8 @@ void main() {
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
   });
 
   test('save image', () async {
